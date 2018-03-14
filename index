@@ -1,0 +1,27 @@
+/*laravel php Route Sample*/
+Route::get('/ajax/schools',function(Request $request){
+        $lg = $request->input('local_government');
+        $schools = School::where('local_government','=',$lg)->pluck('name','students_population');
+        return $schools;
+    });
+    
+/*HTML*/
+
+
+
+//Ajax Jquery Code
+$('#local_government').on('input', function(e){
+    console.log(e);
+    var local_government = e.target.value;
+    $.get('{{ url('admin') }}/ajax/schools?local_government=' + local_government, function(data) {
+        //console.log(data);
+        $('#school').empty();
+        var empty = $('<option></option>').text('Select a School').val('');
+        $('#school').append(empty);
+        $.each(data, function(index,subCatObj){
+            console.log(subCatObj);
+            var option = $('<option></option>').text(subCatObj).val(subCatObj);
+            $('#school').append(option);
+        });
+    });
+});
